@@ -1,0 +1,191 @@
+﻿<?xml version="1.0"?>
+
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://www.bdoc.com"
+  xmlns="http://www.bdoc.com"
+  elementFormDefault="qualified">
+
+  <!-- definition of restricted types -->
+  <xs:simpleType name="upnameType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="([A-Z0-9_]{1,31})"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="descriptionType">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="255"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="xmlfilenameType">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="8"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="xsdfilenameType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(.{1,8})\.xsd"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tagType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="([a-zA-Z_]([a-zA-Z0-9\-_.]*){1,214})"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="xpathType">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="1650"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="dataType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="STRING"/>
+      <xs:enumeration value="CHAR"/>
+      <xs:enumeration value="INTEGER"/>
+      <xs:enumeration value="REAL"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="entityType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FUNCTIONAL"/>
+      <xs:enumeration value="TECHNICAL"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="streamType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="XML"/>
+      <xs:enumeration value="XPATH"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="separatorType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="START"/>
+      <xs:enumeration value="END"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <!-- definition of complex elements -->
+  <xs:complexType name="separatorNodeComplexType">
+    <xs:choice>
+      <xs:element name="xpath" type="xpathType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="tag"	type="tagType" minOccurs="0" maxOccurs="1"/>
+    </xs:choice>
+    <xs:attribute name="type" type="separatorType" use="required"/>
+    <xs:attribute name="useForChildren" type="xs:boolean" use="optional"/>
+  </xs:complexType>
+
+  <xs:complexType name="nodesToAssembleNodeComplexType">
+    <xs:choice>
+      <xs:element name="xpath" type="xpathType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="tag"	type="tagType" minOccurs="0" maxOccurs="1"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="assemblyListNodeComplexType">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="xpath" type="xpathType" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="tag"	type="tagType" minOccurs="0" maxOccurs="1"/>
+      </xs:choice>
+      <xs:element name="nodesToAssemble" type="nodesToAssembleNodeComplexType" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="dataNodeComplexType">
+    <xs:choice>
+      <xs:element name="xpath" type="xpathType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="tag" type="tagType" minOccurs="0" maxOccurs="1"/>
+    </xs:choice>
+    <xs:attribute name="name" type="upnameType" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="entityNodeComplexType">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="xpath" type="xpathType" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="tag" type="tagType" minOccurs="0" maxOccurs="1"/>
+      </xs:choice>
+      <xs:element name="dataNode" type="dataNodeComplexType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="upnameType" use="required" />
+    <xs:attribute name="iterative" type="xs:boolean" use="optional" />
+  </xs:complexType>
+
+  <xs:complexType name="streamComplexType">
+    <xs:sequence>
+      <xs:element name="description" type="descriptionType" minOccurs="0" maxOccurs="1"/>
+      <!--FSO : debut modification -->
+      <xs:element name="xmlFile" type="xmlfilenameType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="xsdFile" type="xsdfilenameType" minOccurs="0" maxOccurs="1"/>
+      <!--FSO : fin modification -->
+      <xs:element name="separator" type="separatorNodeComplexType" minOccurs="1" maxOccurs="1"/>
+      <!--FSO : debut modification -->
+      <xs:element name="assemblyList" type="assemblyListNodeComplexType" minOccurs="0" maxOccurs="1"/>
+      <!--FSO : fin modification -->
+      <xs:element name="entityNode" type="entityNodeComplexType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="upnameType" use="required"/>
+    <xs:attribute name="type" type="streamType" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="entityComplexType">
+    <xs:sequence>
+      <xs:element name="description" type="descriptionType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="entityData" type="upnameType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="upnameType" use="required"/>
+    <xs:attribute name="type" type="entityType" use="optional"/>
+    <xs:attribute name="iterative" type="xs:boolean" use="optional" />
+  </xs:complexType>
+
+  <xs:complexType name="dataComplexType">
+    <xs:sequence>
+      <xs:element name="description" type="descriptionType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="upnameType" use="required"/>
+    <xs:attribute name="type" type="dataType" use="required"/>
+    <xs:attribute name="length" type="xs:positiveInteger" use="required"/>
+  </xs:complexType>
+
+
+  <!-- definition of the main structure -->
+
+  <xs:complexType name="streamsComplexType">
+    <xs:sequence>
+      <xs:element name="stream" type="streamComplexType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="entitiesComplexType">
+    <xs:sequence>
+      <xs:element name="entity" type="entityComplexType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="datasComplexType">
+    <xs:sequence>
+      <xs:element name="data" type="dataComplexType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="importComplexType">
+    <xs:sequence>
+      <xs:element name="streams" type="streamsComplexType"/>
+      <xs:element name="entities" type="entitiesComplexType"/>
+      <xs:element name="datas" type="datasComplexType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="import" type="importComplexType"/>
+
+</xs:schema>
