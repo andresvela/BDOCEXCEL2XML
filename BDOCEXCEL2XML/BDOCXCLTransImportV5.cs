@@ -32,14 +32,14 @@ namespace BDOCEXCEL2XML
             XmlElement TranslationCodesList = xmlDoc.CreateElement("TranslationCodesList");
             root.AppendChild(TranslationCodesList);
 
-            XmlElement TranslationCodeDTO = xmlDoc.CreateElement("TranslationCodeDTO");
-            TranslationCodesList.AppendChild(TranslationCodeDTO);
+            //XmlElement TranslationCodeDTO = xmlDoc.CreateElement("TranslationCodeDTO");
+            //TranslationCodesList.AppendChild(TranslationCodeDTO);
 
-            XmlElement TranslationCodeName = xmlDoc.CreateElement("Name");
-            XmlElement TranslationCodeDescription = xmlDoc.CreateElement("Description");
+            //XmlElement TranslationCodeName = xmlDoc.CreateElement("Name");
+            //XmlElement TranslationCodeDescription = xmlDoc.CreateElement("Description");
 
-            TranslationCodeDTO.AppendChild(TranslationCodeName);
-            TranslationCodeDTO.AppendChild(TranslationCodeDescription);
+            //TranslationCodeDTO.AppendChild(TranslationCodeName);
+            //TranslationCodeDTO.AppendChild(TranslationCodeDescription);
 
 
             //XML DATA LISTS
@@ -51,13 +51,14 @@ namespace BDOCEXCEL2XML
             root.AppendChild(childNodeEntities);
 
             //streams
-            XmlElement childNodestreams = xmlDoc.CreateElement("streams");
-            root.AppendChild(childNodestreams);
+            XmlElement DatastreamsList = xmlDoc.CreateElement("DatastreamsList");
+            root.AppendChild(DatastreamsList);
 
-            this.childNodestream = xmlDoc.CreateElement("stream");
-            childNodestreams.AppendChild(childNodestream);
-            childNodestream.SetAttribute("type", "XPATH");
+            XmlElement DatastreamDTO = xmlDoc.CreateElement("DatastreamDTO");
+            DatastreamsList.AppendChild(DatastreamDTO);
 
+            
+           
             this.appEXCEL = new Microsoft.Office.Interop.Excel.ApplicationClass();
             // create the workbook object by opening  the excel file.
             workBook = appEXCEL.Workbooks.Open(excelFilePath, 0, true, 5, "", "", true, XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
@@ -65,7 +66,14 @@ namespace BDOCEXCEL2XML
             workSheet = (Worksheet)workBook.ActiveSheet;
             this.excelRange = workSheet.Cells;
 
-            childNodestream.SetAttribute("name", workSheet.Name);
+            XmlElement NameNodestream = xmlDoc.CreateElement("Name");
+            XmlText nameNodeText = xmlDoc.CreateTextNode("Name");
+            nameNodeText.Value = workSheet.Name;
+            NameNodestream.AppendChild(nameNodeText);
+            DatastreamDTO.AppendChild(NameNodestream);
+
+            this.childNodestream = xmlDoc.CreateElement("XPathDatastream");
+            DatastreamDTO.AppendChild(childNodestream);
 
             //************ TXT init
             FinalTXTData = "";
@@ -82,7 +90,7 @@ namespace BDOCEXCEL2XML
             if (excelLine.dataTypeBDOC != "Entité")
             {
 
-                XmlElement childNode = xmlDoc.CreateElement("DATADTO");
+                XmlElement childNode = xmlDoc.CreateElement("DataDTO");
 
                 XmlElement nameNode = xmlDoc.CreateElement("Name");
                 XmlText nameNodeText = xmlDoc.CreateTextNode("Name");
@@ -100,20 +108,20 @@ namespace BDOCEXCEL2XML
                 typeNode.AppendChild(typeNodeText);
 
                 XmlElement DescriptionTranslationsList = xmlDoc.CreateElement("DescriptionTranslationsList");
-                XmlElement DescriptionTranslationDTO = xmlDoc.CreateElement("DescriptionTranslationDTO");
+                //XmlElement DescriptionTranslationDTO = xmlDoc.CreateElement("DescriptionTranslationDTO");
 
-                XmlElement TranslationCodeName = xmlDoc.CreateElement("TranslationCodeName");
-                XmlElement TranslationCodeDescription = xmlDoc.CreateElement("Translation");
+                //XmlElement TranslationCodeName = xmlDoc.CreateElement("TranslationCodeName");
+                //XmlElement TranslationCodeDescription = xmlDoc.CreateElement("Translation");
 
-                DescriptionTranslationDTO.AppendChild(TranslationCodeName);
-                DescriptionTranslationDTO.AppendChild(TranslationCodeDescription);
+                //DescriptionTranslationDTO.AppendChild(TranslationCodeName);
+                //DescriptionTranslationDTO.AppendChild(TranslationCodeDescription);
 
 
                 childNode.AppendChild(nameNode);
                 childNode.AppendChild(descriptionNode);
                 childNode.AppendChild(typeNode);
 
-                DescriptionTranslationsList.AppendChild(DescriptionTranslationDTO);
+                //DescriptionTranslationsList.AppendChild(DescriptionTranslationDTO);
 
                 childNode.AppendChild(DescriptionTranslationsList);
 
@@ -127,42 +135,46 @@ namespace BDOCEXCEL2XML
             //first entity who defines the document separator
             if (excelLine.dataLevel == "1")
             {
-                XmlElement streamStartNode = xmlDoc.CreateElement("separator");
-                streamStartNode.SetAttribute("useForChildren", "true");
-                streamStartNode.SetAttribute("type", "START");
+                XmlElement streamStartNode = xmlDoc.CreateElement("XPathRequestStartDoc");
 
-                XmlElement streamStartNode2 = xmlDoc.CreateElement("xpath");
-                XmlText textNode = xmlDoc.CreateTextNode("xpath");
+                XmlText textNode = xmlDoc.CreateTextNode("XPathRequestStartDoc");
                 //If the excel has an specific XPATH value
                 if (excelLine.dataXpath != "")
                     textNode.Value = "descendant-or-self::" + excelLine.dataXpath;
                 else
                     textNode.Value = "descendant-or-self::" + excelLine.dataName;
-                streamStartNode2.AppendChild(textNode);
-                streamStartNode.AppendChild(streamStartNode2);
+                streamStartNode.AppendChild(textNode);
                 childNodestream.AppendChild(streamStartNode);
+                this.XPathEntitiesList = xmlDoc.CreateElement("XPathEntitiesList");
+                childNodestream.AppendChild(XPathEntitiesList);
+
             }
 
             // entity struct in excel file
             if (excelLine.dataTypeBDOC == "Entité" && excelLine.dataLevel != "0" && excelLine.dataLevel != "1")
             {
-                streamNode = xmlDoc.CreateElement("entityNode");
-                streamNode.SetAttribute("name", excelLine.dataName);
-                streamNode.SetAttribute("iterative", (excelLine.dataIterative == "Non") ? "false" : "true");
+                streamNode = xmlDoc.CreateElement("XPathEntityDTO");
+                XmlElement RefEntityName = xmlDoc.CreateElement("RefEntityName");
+                XmlText RefEntityNameText = xmlDoc.CreateTextNode("RefEntityName");
+                RefEntityNameText.Value =  excelLine.dataName;
 
-                
+                this.XPathDataList = xmlDoc.CreateElement("XPathDataList");
 
-                XmlElement streamNode2 = xmlDoc.CreateElement("xpath");
-                XmlText textNode = xmlDoc.CreateTextNode("xpath");
+                XmlElement streamNode2 = xmlDoc.CreateElement("XpathRequest");
+                XmlText streamNode2Text = xmlDoc.CreateTextNode("XpathRequest");
                 //If the excel has an specific XPATH value
                 if (excelLine.dataXpath != "")
-                    textNode.Value = "descendant-or-self::" + excelLine.dataXpath;
+                    streamNode2Text.Value = "descendant-or-self::" + excelLine.dataXpath;
                 else
-                    textNode.Value = "descendant-or-self::" + excelLine.dataName;
-                streamNode2.AppendChild(textNode);
-                streamNode.AppendChild(streamNode2);
+                    streamNode2Text.Value = "descendant-or-self::" + excelLine.dataName;
 
-                childNodestream.AppendChild(streamNode);
+                streamNode2.AppendChild(streamNode2Text);
+                streamNode.AppendChild(streamNode2);
+                RefEntityName.AppendChild(RefEntityNameText);
+                streamNode.AppendChild(RefEntityName);
+                streamNode.AppendChild(this.XPathDataList);
+
+                XPathEntitiesList.AppendChild(streamNode);
 
                 //pour les listes
                 if (excelLine.dataName.IndexOf("LIST_") == 0)
@@ -171,19 +183,19 @@ namespace BDOCEXCEL2XML
                     dataStreamNode.SetAttribute("name", excelLine.dataName);
 
                     XmlElement childNode2 = xmlDoc.CreateElement("xpath");
-                    textNode = xmlDoc.CreateTextNode(excelLine.dataDescription);
+                    streamNode2Text = xmlDoc.CreateTextNode(excelLine.dataDescription);
                     //If the excel has an specific XPATH value
                     if (excelLine.dataXpath != "")
-                        textNode.Value = "descendant-or-self::" + excelLine.dataXpath;
+                        streamNode2Text.Value = "descendant-or-self::" + excelLine.dataXpath;
                     else
                     {
                         if (excelLine.dataName.Length > 18)
-                            textNode.Value = "descendant-or-self::OCCURRENCES_" + excelLine.dataName.Substring(0, 18);
+                            streamNode2Text.Value = "descendant-or-self::OCCURRENCES_" + excelLine.dataName.Substring(0, 18);
                         else
-                            textNode.Value = "descendant-or-self::OCCURRENCES_" + excelLine.dataName;
+                            streamNode2Text.Value = "descendant-or-self::OCCURRENCES_" + excelLine.dataName;
                     }
 
-                    childNode2.AppendChild(textNode);
+                    childNode2.AppendChild(streamNode2Text);
                     dataStreamNode.AppendChild(childNode2);
                     streamNode.AppendChild(dataStreamNode);
                 }
@@ -191,9 +203,14 @@ namespace BDOCEXCEL2XML
             //Data struct in excel file
             if (excelLine.dataTypeBDOC != "Entité")
             {
-                XmlElement dataStreamNode = xmlDoc.CreateElement("dataNode");
-                dataStreamNode.SetAttribute("name", excelLine.dataName);
-                XmlElement childNode2 = xmlDoc.CreateElement("xpath");
+                XmlElement dataStreamNode = xmlDoc.CreateElement("XPathDataDTO");
+
+                XmlElement RefDataName = xmlDoc.CreateElement("RefDataName");
+                XmlText RefDataNameText = xmlDoc.CreateTextNode("RefDataName");
+                RefDataNameText.Value = excelLine.dataName;
+                RefDataName.AppendChild(RefDataNameText);
+                
+                XmlElement childNode2 = xmlDoc.CreateElement("XpathRequest");
                 XmlText textNode = xmlDoc.CreateTextNode(excelLine.dataDescription);
                 if (excelLine.dataXpath != "")
                     textNode.Value = "descendant-or-self::" + excelLine.dataXpath;
@@ -201,9 +218,10 @@ namespace BDOCEXCEL2XML
                     textNode.Value = "descendant-or-self::" + excelLine.dataName;
                 childNode2.AppendChild(textNode);
                 dataStreamNode.AppendChild(childNode2);
+                dataStreamNode.AppendChild(RefDataName);
 
                 if (streamNode != null)
-                    streamNode.AppendChild(dataStreamNode);
+                    this.XPathDataList.AppendChild(dataStreamNode);
                 else
                 {
                     throw new Exception(ConfigurationSettings.AppSettings["notEntity1Exception"] + excelLine.dataName + ConfigurationSettings.AppSettings["notEntity2Exception"]);
@@ -317,7 +335,7 @@ namespace BDOCEXCEL2XML
                     //XML
                     this.createData(myBDOCExcelLine);
                     this.createEntity(myBDOCExcelLine);
-                    //this.createStream(myBDOCExcelLine);
+                    this.createStream(myBDOCExcelLine);
 
                     MyProgress.PerformStep();
 
