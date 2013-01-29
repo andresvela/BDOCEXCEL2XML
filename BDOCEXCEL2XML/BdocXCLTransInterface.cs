@@ -17,8 +17,10 @@ namespace BDOCEXCEL2XML
         public XmlElement childNodeEntities;
         public XmlElement childNodestream;
         public XmlElement dataEntityListNode;
+        public XmlElement XPathEntitiesList;
         public XmlElement entityNode;
         public XmlElement streamNode;
+        public XmlElement XPathDataList;
 
         public Microsoft.Office.Interop.Excel.ApplicationClass appEXCEL;
         public Worksheet workSheet;
