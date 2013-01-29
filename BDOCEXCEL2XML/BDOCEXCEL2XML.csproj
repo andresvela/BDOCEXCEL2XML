@@ -85,6 +85,7 @@
     </Compile>
     <Compile Include="BDOCExcelLine.cs" />
     <Compile Include="BdocXCLTransFlux.cs" />
+    <Compile Include="BDOCXCLTransImportV5.cs" />
     <Compile Include="BdocXCLTransImport.cs" />
     <Compile Include="BdocXCLTransInterface.cs" />
     <Compile Include="BDOCXCLTransTxt.cs" />

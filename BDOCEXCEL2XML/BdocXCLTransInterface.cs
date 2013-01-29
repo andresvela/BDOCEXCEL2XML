@@ -16,7 +16,7 @@ namespace BDOCEXCEL2XML
         public XmlElement childNodeData;
         public XmlElement childNodeEntities;
         public XmlElement childNodestream;
-
+        public XmlElement dataEntityListNode;
         public XmlElement entityNode;
         public XmlElement streamNode;
 

@@ -70,9 +70,9 @@ namespace BDOCEXCEL2XML
 
         private void button1_Click(object sender, EventArgs e)
         {
-            toolStripStatusLabel2.Text = ConfigurationSettings.AppSettings["workingText"]; 
+            toolStripStatusLabel2.Text = ConfigurationSettings.AppSettings["workingText"];
 
-            BdocXCLTransImport myXCLTrans = new BdocXCLTransImport(XCLFileDialog.FileName);
+            BDOCXCLTransImportV5 myXCLTrans = new BDOCXCLTransImportV5(XCLFileDialog.FileName);
             try
             {
                 myXCLTrans.createXML(toolStripProgressBar1);
@@ -83,8 +83,8 @@ namespace BDOCEXCEL2XML
                 labelXML.Text = myXCLTrans.XML;
                 xmlDoc.Save(@"" + System.Environment.GetEnvironmentVariable("temp") + "\\" + ConfigurationSettings.AppSettings["importNameFile"]);
                                                
-                XMLValidator val = new XMLValidator();
-                val.Validate(xmlDoc.InnerXml);
+                //XMLValidator val = new XMLValidator();
+                //val.Validate(xmlDoc.InnerXml);
 
 
                 webBrowser1.Navigate(@"" + System.Environment.GetEnvironmentVariable("temp") + "\\" + ConfigurationSettings.AppSettings["importNameFile"]);
