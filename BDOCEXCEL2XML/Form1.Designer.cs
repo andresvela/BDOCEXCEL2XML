@@ -50,6 +50,8 @@
             this.labelXML = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label5 = new System.Windows.Forms.Label();
+            this.comboBoxBDOCVersion = new System.Windows.Forms.ComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label2 = new System.Windows.Forms.Label();
             this.webBrowser2 = new System.Windows.Forms.WebBrowser();
@@ -242,6 +244,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label5);
+            this.tabPage1.Controls.Add(this.comboBoxBDOCVersion);
             this.tabPage1.Controls.Add(this.button1);
             this.tabPage1.Controls.Add(this.webBrowser1);
             this.tabPage1.Controls.Add(this.button2);
@@ -253,6 +257,28 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Xml for data import";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(290, 360);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(134, 13);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "Select your BDOC Version:";
+            // 
+            // comboBoxBDOCVersion
+            // 
+            this.comboBoxBDOCVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBDOCVersion.Enabled = false;
+            this.comboBoxBDOCVersion.FormattingEnabled = true;
+            this.comboBoxBDOCVersion.Items.AddRange(new object[] {
+            "Version 4.x",
+            "Version 5.x"});
+            this.comboBoxBDOCVersion.Location = new System.Drawing.Point(430, 352);
+            this.comboBoxBDOCVersion.Name = "comboBoxBDOCVersion";
+            this.comboBoxBDOCVersion.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxBDOCVersion.TabIndex = 12;
             // 
             // tabPage2
             // 
@@ -356,7 +382,6 @@
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
             this.comboBox1.Sorted = true;
             this.comboBox1.TabIndex = 17;
-            this.comboBox1.SelectedItem = "Data";
             // 
             // label3
             // 
@@ -466,6 +491,8 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox comboBoxBDOCVersion;
     }
 }
 

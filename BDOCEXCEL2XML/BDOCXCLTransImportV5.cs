@@ -200,6 +200,7 @@ namespace BDOCEXCEL2XML
                     streamNode.AppendChild(dataStreamNode);
                 }
             }
+
             //Data struct in excel file
             if (excelLine.dataTypeBDOC != "Entité")
             {
@@ -209,6 +210,38 @@ namespace BDOCEXCEL2XML
                 XmlText RefDataNameText = xmlDoc.CreateTextNode("RefDataName");
                 RefDataNameText.Value = excelLine.dataName;
                 RefDataName.AppendChild(RefDataNameText);
+
+
+                XmlElement DataFormat = xmlDoc.CreateElement("DataFormat");
+
+
+                XmlElement NumericDataFormat = xmlDoc.CreateElement("NumericDataFormat");
+                XmlElement DecimalSeparator = xmlDoc.CreateElement("DecimalSeparator");
+                XmlText DecimalSeparatorVal = xmlDoc.CreateTextNode("DecimalSeparator");
+                DecimalSeparatorVal.Value = ",";
+                DecimalSeparator.AppendChild(DecimalSeparatorVal);
+                NumericDataFormat.AppendChild(DecimalSeparator);
+
+                XmlElement DatetimeDataFormat = xmlDoc.CreateElement("DatetimeDataFormat");
+                XmlElement DatetimeFormat = xmlDoc.CreateElement("DatetimeFormat");
+                XmlElement DateTimeFormatProduction = xmlDoc.CreateElement("DateTimeFormatProduction");
+
+                XmlText DatetimeFormatVal = xmlDoc.CreateTextNode("DatetimeFormat");
+                XmlText DateTimeFormatProductionVal = xmlDoc.CreateTextNode("DateTimeFormatProduction");
+                DatetimeFormatVal.Value = "dd/MM/yyyy";
+                DatetimeFormat.AppendChild(DatetimeFormatVal);
+                DateTimeFormatProductionVal.Value = "%d/%m/%Y";
+                DateTimeFormatProduction.AppendChild(DateTimeFormatProductionVal);
+
+                DatetimeDataFormat.AppendChild(DatetimeFormat);
+                DatetimeDataFormat.AppendChild(DateTimeFormatProduction);
+
+                XmlElement StringDataFormat = xmlDoc.CreateElement("StringDataFormat");
+                
+
+                DataFormat.AppendChild(NumericDataFormat);
+                DataFormat.AppendChild(DatetimeDataFormat);
+                DataFormat.AppendChild(StringDataFormat);
                 
                 XmlElement childNode2 = xmlDoc.CreateElement("XpathRequest");
                 XmlText textNode = xmlDoc.CreateTextNode(excelLine.dataDescription);
@@ -219,6 +252,7 @@ namespace BDOCEXCEL2XML
                 childNode2.AppendChild(textNode);
                 dataStreamNode.AppendChild(childNode2);
                 dataStreamNode.AppendChild(RefDataName);
+                dataStreamNode.AppendChild(DataFormat);
 
                 if (streamNode != null)
                     this.XPathDataList.AppendChild(dataStreamNode);

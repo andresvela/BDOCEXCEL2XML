@@ -65,6 +65,9 @@ namespace BDOCEXCEL2XML
                 
                 webBrowser1.DocumentText = ConfigurationSettings.AppSettings["excelReadyText"];
                 webBrowser2.DocumentText = ConfigurationSettings.AppSettings["excelReadyText"];
+
+                comboBoxBDOCVersion.SelectedItem = "Version 5.x";
+                comboBoxBDOCVersion.Enabled = true;
             }
         }
 
@@ -72,7 +75,13 @@ namespace BDOCEXCEL2XML
         {
             toolStripStatusLabel2.Text = ConfigurationSettings.AppSettings["workingText"];
 
-            BDOCXCLTransImportV5 myXCLTrans = new BDOCXCLTransImportV5(XCLFileDialog.FileName);
+            BdocXCLTransInterface myXCLTrans;
+
+            if (comboBoxBDOCVersion.SelectedItem=="Version 5.x")
+                myXCLTrans = new BDOCXCLTransImportV5(XCLFileDialog.FileName);
+            
+            else
+                myXCLTrans = new BdocXCLTransImport(XCLFileDialog.FileName);
             try
             {
                 myXCLTrans.createXML(toolStripProgressBar1);
@@ -259,7 +268,7 @@ namespace BDOCEXCEL2XML
             //comboBox2.SelectedItem = workSheet.Name;
         }
 
-       
+          
 
                
     

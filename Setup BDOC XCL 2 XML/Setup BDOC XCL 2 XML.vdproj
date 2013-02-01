@@ -22,13 +22,13 @@
         "Entry"
         {
         "MsmKey" = "8:_1007E6856895338DF7B590388A2019F4"
-        "OwnerKey" = "8:_8D18E41BDDDD4CAC800F23C032266B7D"
+        "OwnerKey" = "8:_197C2C76CB225E53573BE37792AD9628"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_1007E6856895338DF7B590388A2019F4"
-        "OwnerKey" = "8:_197C2C76CB225E53573BE37792AD9628"
+        "OwnerKey" = "8:_8D18E41BDDDD4CAC800F23C032266B7D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -70,7 +70,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8988757562C28EEEAC87538B091D8653"
+        "OwnerKey" = "8:_8D18E41BDDDD4CAC800F23C032266B7D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -82,7 +82,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8D18E41BDDDD4CAC800F23C032266B7D"
+        "OwnerKey" = "8:_8988757562C28EEEAC87538B091D8653"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -182,7 +182,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "Version" = "8:3.5.21022"
+                "FrameworkVersion" = "8:3.5.21022"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=76617"
                 }
@@ -381,14 +381,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BDOC Excel to  XML"
-        "ProductCode" = "8:{94962027-1679-41C6-98F8-1B86E0584602}"
-        "PackageCode" = "8:{12D4F51D-91CB-4573-84F2-484F7D97FDDC}"
+        "ProductCode" = "8:{1429C54F-471C-499E-99FE-4909DB2323CF}"
+        "PackageCode" = "8:{C420364A-A5D1-46D7-AD10-CE0BA6587179}"
         "UpgradeCode" = "8:{8057C356-17ED-4E89-BFE2-76CD6B4DDD73}"
+        "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:2.0.0"
+        "ProductVersion" = "8:3.0.0"
         "Manufacturer" = "8:Business Document"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -916,7 +917,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8D18E41BDDDD4CAC800F23C032266B7D"
             {
-            "SourcePath" = "8:..\\BDOCEXCEL2XML\\obj\\Release\\BDOCEXCEL2XML.exe"
+            "SourcePath" = "8:..\\BDOCEXCEL2XML\\obj\\Debug\\BDOCEXCEL2XML.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_05F21AEED7244686BF2701A6C641D5B7"
