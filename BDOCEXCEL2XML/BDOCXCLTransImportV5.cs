@@ -68,12 +68,27 @@ namespace BDOCEXCEL2XML
 
             XmlElement NameNodestream = xmlDoc.CreateElement("Name");
             XmlText nameNodeText = xmlDoc.CreateTextNode("Name");
-            nameNodeText.Value = workSheet.Name;
+            nameNodeText.Value = workSheet.Name.ToUpper();
             NameNodestream.AppendChild(nameNodeText);
             DatastreamDTO.AppendChild(NameNodestream);
 
-            this.childNodestream = xmlDoc.CreateElement("XPathDatastream");
+            XmlElement TypeNodestream = xmlDoc.CreateElement("DatastreamType");
+            XmlText typeNodeText = xmlDoc.CreateTextNode("DatastreamType");
+            typeNodeText.Value = "FLAT";
+            TypeNodestream.AppendChild(typeNodeText);
+            DatastreamDTO.AppendChild(TypeNodestream);
+
+
+            
+            this.childNodestream = xmlDoc.CreateElement("FlatDatastream");
             DatastreamDTO.AppendChild(childNodestream);
+
+            XmlElement FlatEncodingNodestream = xmlDoc.CreateElement("FlatEncoding");
+            XmlText FlatEncodingNodeText = xmlDoc.CreateTextNode("FlatEncoding");
+            FlatEncodingNodeText.Value = "Win1252";
+            FlatEncodingNodestream.AppendChild(FlatEncodingNodeText);
+            this.childNodestream.AppendChild(FlatEncodingNodestream);
+
 
             //************ TXT init
             FinalTXTData = "";
@@ -129,23 +144,246 @@ namespace BDOCEXCEL2XML
             }
         }
 
+        /*        public override void createStream(BDOCExcelLine excelLine)
+                {
+                    //STREAMS
+                    //first entity who defines the document separator
+                    if (excelLine.dataLevel == "1")
+                    {
+                        XmlElement streamStartNode = xmlDoc.CreateElement("XPathRequestStartDoc");
+
+                        XmlText textNode = xmlDoc.CreateTextNode("XPathRequestStartDoc");
+                        //If the excel has an specific XPATH value
+                        if (excelLine.dataXpath != "")
+                            textNode.Value = "descendant-or-self::" + excelLine.dataXpath;
+                        else
+                            textNode.Value = "descendant-or-self::" + excelLine.dataName;
+                        streamStartNode.AppendChild(textNode);
+                        childNodestream.AppendChild(streamStartNode);
+                        this.XPathEntitiesList = xmlDoc.CreateElement("XPathEntitiesList");
+                        childNodestream.AppendChild(XPathEntitiesList);
+
+                    }
+
+                    // entity struct in excel file
+                    if (excelLine.dataTypeBDOC == "Entité" && excelLine.dataLevel != "0" && excelLine.dataLevel != "1")
+                    {
+                        streamNode = xmlDoc.CreateElement("XPathEntityDTO");
+                        XmlElement RefEntityName = xmlDoc.CreateElement("RefEntityName");
+                        XmlText RefEntityNameText = xmlDoc.CreateTextNode("RefEntityName");
+                        RefEntityNameText.Value =  excelLine.dataName;
+
+                        this.XPathDataList = xmlDoc.CreateElement("XPathDataList");
+
+                        XmlElement streamNode2 = xmlDoc.CreateElement("XpathRequest");
+                        XmlText streamNode2Text = xmlDoc.CreateTextNode("XpathRequest");
+                        //If the excel has an specific XPATH value
+                        if (excelLine.dataXpath != "")
+                            streamNode2Text.Value = "descendant-or-self::" + excelLine.dataXpath;
+                        else
+                            streamNode2Text.Value = "descendant-or-self::" + excelLine.dataName;
+
+                        streamNode2.AppendChild(streamNode2Text);
+                        streamNode.AppendChild(streamNode2);
+                        RefEntityName.AppendChild(RefEntityNameText);
+                        streamNode.AppendChild(RefEntityName);
+                        streamNode.AppendChild(this.XPathDataList);
+
+                        XPathEntitiesList.AppendChild(streamNode);
+
+                        //pour les listes
+                        if (excelLine.dataName.IndexOf("LIST_") == 0)
+                        {
+                            XmlElement dataStreamNode = xmlDoc.CreateElement("dataNode");
+                            dataStreamNode.SetAttribute("name", excelLine.dataName);
+
+                            XmlElement childNode2 = xmlDoc.CreateElement("xpath");
+                            streamNode2Text = xmlDoc.CreateTextNode(excelLine.dataDescription);
+                            //If the excel has an specific XPATH value
+                            if (excelLine.dataXpath != "")
+                                streamNode2Text.Value = "descendant-or-self::" + excelLine.dataXpath;
+                            else
+                            {
+                                if (excelLine.dataName.Length > 18)
+                                    streamNode2Text.Value = "descendant-or-self::OCCURRENCES_" + excelLine.dataName.Substring(0, 18);
+                                else
+                                    streamNode2Text.Value = "descendant-or-self::OCCURRENCES_" + excelLine.dataName;
+                            }
+
+                            childNode2.AppendChild(streamNode2Text);
+                            dataStreamNode.AppendChild(childNode2);
+                            streamNode.AppendChild(dataStreamNode);
+                        }
+                    }
+
+                    //Data struct in excel file
+                    if (excelLine.dataTypeBDOC != "Entité")
+                    {
+                        XmlElement dataStreamNode = xmlDoc.CreateElement("XPathDataDTO");
+
+                        XmlElement RefDataName = xmlDoc.CreateElement("RefDataName");
+                        XmlText RefDataNameText = xmlDoc.CreateTextNode("RefDataName");
+                        RefDataNameText.Value = excelLine.dataName;
+                        RefDataName.AppendChild(RefDataNameText);
+
+
+                        XmlElement DataFormat = xmlDoc.CreateElement("DataFormat");
+
+
+                        XmlElement NumericDataFormat = xmlDoc.CreateElement("NumericDataFormat");
+                        XmlElement DecimalSeparator = xmlDoc.CreateElement("DecimalSeparator");
+                        XmlText DecimalSeparatorVal = xmlDoc.CreateTextNode("DecimalSeparator");
+                        DecimalSeparatorVal.Value = ",";
+                        DecimalSeparator.AppendChild(DecimalSeparatorVal);
+                        NumericDataFormat.AppendChild(DecimalSeparator);
+
+                        XmlElement DatetimeDataFormat = xmlDoc.CreateElement("DatetimeDataFormat");
+                        XmlElement DatetimeFormat = xmlDoc.CreateElement("DatetimeFormat");
+                        XmlElement DateTimeFormatProduction = xmlDoc.CreateElement("DateTimeFormatProduction");
+
+                        XmlText DatetimeFormatVal = xmlDoc.CreateTextNode("DatetimeFormat");
+                        XmlText DateTimeFormatProductionVal = xmlDoc.CreateTextNode("DateTimeFormatProduction");
+                        DatetimeFormatVal.Value = "dd/MM/yyyy";
+                        DatetimeFormat.AppendChild(DatetimeFormatVal);
+                        DateTimeFormatProductionVal.Value = "%d/%m/%Y";
+                        DateTimeFormatProduction.AppendChild(DateTimeFormatProductionVal);
+
+                        DatetimeDataFormat.AppendChild(DatetimeFormat);
+                        DatetimeDataFormat.AppendChild(DateTimeFormatProduction);
+
+                        XmlElement StringDataFormat = xmlDoc.CreateElement("StringDataFormat");
+                
+
+                        DataFormat.AppendChild(NumericDataFormat);
+                        DataFormat.AppendChild(DatetimeDataFormat);
+                        DataFormat.AppendChild(StringDataFormat);
+                
+                        XmlElement childNode2 = xmlDoc.CreateElement("XpathRequest");
+                        XmlText textNode = xmlDoc.CreateTextNode(excelLine.dataDescription);
+                        if (excelLine.dataXpath != "")
+                            textNode.Value = "descendant-or-self::" + excelLine.dataXpath;
+                        else
+                            textNode.Value = "descendant-or-self::" + excelLine.dataName;
+                        childNode2.AppendChild(textNode);
+                        dataStreamNode.AppendChild(childNode2);
+                        dataStreamNode.AppendChild(RefDataName);
+                        dataStreamNode.AppendChild(DataFormat);
+
+                        if (streamNode != null)
+                            this.XPathDataList.AppendChild(dataStreamNode);
+                        else
+                        {
+                            throw new Exception(ConfigurationSettings.AppSettings["notEntity1Exception"] + excelLine.dataName + ConfigurationSettings.AppSettings["notEntity2Exception"]);
+                        }
+
+                    }
+                    //---------------------------------------
+
+                }
+*/
+                public override void createEntity(BDOCExcelLine excelLine)
+                {
+                    //pour les entities           
+                    if (excelLine.dataTypeBDOC == "Entité" && excelLine.dataName != "FLUX" && excelLine.dataLevel != "0")
+                    {
+                        if (this.lastObjectInserted == "ENTITY")
+                            childNodeEntities.RemoveChild(entityNode);
+
+            
+
+                        entityNode = this.xmlDoc.CreateElement("EntityDTO");               
+                        childNodeEntities.AppendChild(entityNode);
+
+
+                        XmlElement nameNode = xmlDoc.CreateElement("Name");
+                        XmlText nameNodeText = xmlDoc.CreateTextNode("Name");
+                        nameNodeText.Value = excelLine.dataName;
+                        nameNode.AppendChild(nameNodeText);
+
+                        XmlElement descriptionNode = xmlDoc.CreateElement("Description");
+                        XmlText descriptionNodeText = xmlDoc.CreateTextNode("Description");
+                        descriptionNodeText.Value = excelLine.dataDescription;
+                        descriptionNode.AppendChild(descriptionNodeText);
+
+                        XmlElement typeNode = xmlDoc.CreateElement("IsIterative");
+                        XmlText typeNodeText = xmlDoc.CreateTextNode("IsIterative");
+                        typeNodeText.Value = (excelLine.dataIterative == "Non") ? "false" : "true";
+                        typeNode.AppendChild(typeNodeText);
+
+
+                        this.dataEntityListNode = xmlDoc.CreateElement("DataNamesList");
+             
+
+                        entityNode.AppendChild(nameNode);
+                        entityNode.AppendChild(descriptionNode);
+                        entityNode.AppendChild(typeNode);
+                        entityNode.AppendChild(this.dataEntityListNode);
+
+                          
+                        this.lastObjectInserted = "ENTITY";
+                        if (excelLine.dataName.IndexOf("LIST_") == 0)
+                        {
+                            XmlElement dataEntityNode = xmlDoc.CreateElement("string");                    
+                            XmlText textNode = xmlDoc.CreateTextNode(excelLine.dataName);
+                            if (excelLine.dataName.Length > 18)
+                                textNode.Value = "OCCURRENCES_" + excelLine.dataName.Substring(0, 18);
+                            else
+                                textNode.Value = "OCCURRENCES_" + excelLine.dataName;
+
+                            dataEntityNode.AppendChild(textNode);
+                            this.dataEntityListNode.AppendChild(dataEntityNode);
+                        }
+                    }
+                    if (excelLine.dataTypeBDOC != "Entité")
+                    {
+                        XmlElement dataEntityNode = xmlDoc.CreateElement("string");               
+                        XmlText textNode = xmlDoc.CreateTextNode(excelLine.dataDescription);
+                        textNode.Value = excelLine.dataName;
+                        dataEntityNode.AppendChild(textNode);
+                        this.dataEntityListNode.AppendChild(dataEntityNode);
+                        this.lastObjectInserted = "DATA";
+                    }
+                    //---------------------------------------
+
+                }
+
+     
+      
         public override void createStream(BDOCExcelLine excelLine)
         {
             //STREAMS
             //first entity who defines the document separator
             if (excelLine.dataLevel == "1")
             {
-                XmlElement streamStartNode = xmlDoc.CreateElement("XPathRequestStartDoc");
+                XmlElement streamStartNode = xmlDoc.CreateElement("FlatStartDocEntity");
 
-                XmlText textNode = xmlDoc.CreateTextNode("XPathRequestStartDoc");
-                //If the excel has an specific XPATH value
-                if (excelLine.dataXpath != "")
-                    textNode.Value = "descendant-or-self::" + excelLine.dataXpath;
-                else
-                    textNode.Value = "descendant-or-self::" + excelLine.dataName;
-                streamStartNode.AppendChild(textNode);
+                XmlElement IdEntity = xmlDoc.CreateElement("IdEntity");
+                XmlText IdEntitytext = xmlDoc.CreateTextNode("IdEntity");
+                //If the excel has an specific XPATH value               
+                IdEntitytext.Value = excelLine.dataXpath;
+                IdEntity.AppendChild(IdEntitytext);
+                streamStartNode.AppendChild(IdEntity);
+
                 childNodestream.AppendChild(streamStartNode);
-                this.XPathEntitiesList = xmlDoc.CreateElement("XPathEntitiesList");
+
+                XmlElement StartSeparator = xmlDoc.CreateElement("StartSeparator");
+                XmlElement Position = xmlDoc.CreateElement("Position");
+                XmlText PositionText = xmlDoc.CreateTextNode("Position");
+                PositionText.Value = "2";
+                Position.AppendChild(PositionText);
+                StartSeparator.AppendChild(Position);
+
+                XmlElement StopSeparator = xmlDoc.CreateElement("StopSeparator");
+                XmlElement Value = xmlDoc.CreateElement("Value");
+                XmlText ValueText = xmlDoc.CreateTextNode("Value");
+                ValueText.Value = "#";
+                Value.AppendChild(ValueText);
+                StopSeparator.AppendChild(Value);
+
+                streamStartNode.AppendChild(StartSeparator);
+                streamStartNode.AppendChild(StopSeparator);
+
+                this.XPathEntitiesList = xmlDoc.CreateElement("FlatEntitiesList");
                 childNodestream.AppendChild(XPathEntitiesList);
 
             }
@@ -153,20 +391,20 @@ namespace BDOCEXCEL2XML
             // entity struct in excel file
             if (excelLine.dataTypeBDOC == "Entité" && excelLine.dataLevel != "0" && excelLine.dataLevel != "1")
             {
-                streamNode = xmlDoc.CreateElement("XPathEntityDTO");
+                streamNode = xmlDoc.CreateElement("FlatEntityDTO");
                 XmlElement RefEntityName = xmlDoc.CreateElement("RefEntityName");
                 XmlText RefEntityNameText = xmlDoc.CreateTextNode("RefEntityName");
-                RefEntityNameText.Value =  excelLine.dataName;
+                RefEntityNameText.Value = excelLine.dataName;
 
-                this.XPathDataList = xmlDoc.CreateElement("XPathDataList");
+                this.XPathDataList = xmlDoc.CreateElement("FlatDataFillersList");
 
-                XmlElement streamNode2 = xmlDoc.CreateElement("XpathRequest");
-                XmlText streamNode2Text = xmlDoc.CreateTextNode("XpathRequest");
+                XmlElement streamNode2 = xmlDoc.CreateElement("IdEntity");
+                XmlText streamNode2Text = xmlDoc.CreateTextNode("IdEntity");
                 //If the excel has an specific XPATH value
                 if (excelLine.dataXpath != "")
-                    streamNode2Text.Value = "descendant-or-self::" + excelLine.dataXpath;
+                    streamNode2Text.Value =  excelLine.dataXpath;
                 else
-                    streamNode2Text.Value = "descendant-or-self::" + excelLine.dataName;
+                    streamNode2Text.Value =  excelLine.dataName;
 
                 streamNode2.AppendChild(streamNode2Text);
                 streamNode.AppendChild(streamNode2);
@@ -204,7 +442,7 @@ namespace BDOCEXCEL2XML
             //Data struct in excel file
             if (excelLine.dataTypeBDOC != "Entité")
             {
-                XmlElement dataStreamNode = xmlDoc.CreateElement("XPathDataDTO");
+                XmlElement dataStreamNode = xmlDoc.CreateElement("FlatDataFillerDTO");
 
                 XmlElement RefDataName = xmlDoc.CreateElement("RefDataName");
                 XmlText RefDataNameText = xmlDoc.CreateTextNode("RefDataName");
@@ -212,6 +450,21 @@ namespace BDOCEXCEL2XML
                 RefDataName.AppendChild(RefDataNameText);
 
 
+                XmlElement StartSeparator = xmlDoc.CreateElement("StartSeparator");
+                XmlElement Position = xmlDoc.CreateElement("Position");
+                XmlText PositionText = xmlDoc.CreateTextNode("Position");
+                PositionText.Value = "1";
+                Position.AppendChild(PositionText);
+                StartSeparator.AppendChild(Position);
+
+                XmlElement StopSeparator = xmlDoc.CreateElement("StopSeparator");
+                XmlElement Value = xmlDoc.CreateElement("Value");
+                XmlText ValueText = xmlDoc.CreateTextNode("Value");
+                ValueText.Value = "#";
+                Value.AppendChild(ValueText);
+                StopSeparator.AppendChild(Value);
+
+                
                 XmlElement DataFormat = xmlDoc.CreateElement("DataFormat");
 
 
@@ -237,21 +490,28 @@ namespace BDOCEXCEL2XML
                 DatetimeDataFormat.AppendChild(DateTimeFormatProduction);
 
                 XmlElement StringDataFormat = xmlDoc.CreateElement("StringDataFormat");
-                
+
 
                 DataFormat.AppendChild(NumericDataFormat);
                 DataFormat.AppendChild(DatetimeDataFormat);
                 DataFormat.AppendChild(StringDataFormat);
-                
-                XmlElement childNode2 = xmlDoc.CreateElement("XpathRequest");
-                XmlText textNode = xmlDoc.CreateTextNode(excelLine.dataDescription);
-                if (excelLine.dataXpath != "")
-                    textNode.Value = "descendant-or-self::" + excelLine.dataXpath;
-                else
-                    textNode.Value = "descendant-or-self::" + excelLine.dataName;
-                childNode2.AppendChild(textNode);
-                dataStreamNode.AppendChild(childNode2);
+
+               
+
+
+
+               // XmlElement childNode2 = xmlDoc.CreateElement("XpathRequest");
+               // XmlText textNode = xmlDoc.CreateTextNode(excelLine.dataDescription);
+               // if (excelLine.dataXpath != "")
+                //    textNode.Value = "descendant-or-self::" + excelLine.dataXpath;
+                //else
+               //     textNode.Value = "descendant-or-self::" + excelLine.dataName;
+               // childNode2.AppendChild(textNode);
+                //dataStreamNode.AppendChild(childNode2);
                 dataStreamNode.AppendChild(RefDataName);
+                dataStreamNode.AppendChild(StartSeparator);
+                dataStreamNode.AppendChild(StopSeparator);
+
                 dataStreamNode.AppendChild(DataFormat);
 
                 if (streamNode != null)
@@ -261,72 +521,6 @@ namespace BDOCEXCEL2XML
                     throw new Exception(ConfigurationSettings.AppSettings["notEntity1Exception"] + excelLine.dataName + ConfigurationSettings.AppSettings["notEntity2Exception"]);
                 }
 
-            }
-            //---------------------------------------
-
-        }
-
-        public override void createEntity(BDOCExcelLine excelLine)
-        {
-            //pour les entities           
-            if (excelLine.dataTypeBDOC == "Entité" && excelLine.dataName != "FLUX" && excelLine.dataLevel != "0")
-            {
-                if (this.lastObjectInserted == "ENTITY")
-                    childNodeEntities.RemoveChild(entityNode);
-
-            
-
-                entityNode = this.xmlDoc.CreateElement("EntityDTO");               
-                childNodeEntities.AppendChild(entityNode);
-
-
-                XmlElement nameNode = xmlDoc.CreateElement("Name");
-                XmlText nameNodeText = xmlDoc.CreateTextNode("Name");
-                nameNodeText.Value = excelLine.dataName;
-                nameNode.AppendChild(nameNodeText);
-
-                XmlElement descriptionNode = xmlDoc.CreateElement("Description");
-                XmlText descriptionNodeText = xmlDoc.CreateTextNode("Description");
-                descriptionNodeText.Value = excelLine.dataDescription;
-                descriptionNode.AppendChild(descriptionNodeText);
-
-                XmlElement typeNode = xmlDoc.CreateElement("IsIterative");
-                XmlText typeNodeText = xmlDoc.CreateTextNode("IsIterative");
-                typeNodeText.Value = (excelLine.dataIterative == "Non") ? "false" : "true";
-                typeNode.AppendChild(typeNodeText);
-
-
-                this.dataEntityListNode = xmlDoc.CreateElement("DataNamesList");
-             
-
-                entityNode.AppendChild(nameNode);
-                entityNode.AppendChild(descriptionNode);
-                entityNode.AppendChild(typeNode);
-                entityNode.AppendChild(this.dataEntityListNode);
-
-                          
-                this.lastObjectInserted = "ENTITY";
-                if (excelLine.dataName.IndexOf("LIST_") == 0)
-                {
-                    XmlElement dataEntityNode = xmlDoc.CreateElement("string");                    
-                    XmlText textNode = xmlDoc.CreateTextNode(excelLine.dataName);
-                    if (excelLine.dataName.Length > 18)
-                        textNode.Value = "OCCURRENCES_" + excelLine.dataName.Substring(0, 18);
-                    else
-                        textNode.Value = "OCCURRENCES_" + excelLine.dataName;
-
-                    dataEntityNode.AppendChild(textNode);
-                    this.dataEntityListNode.AppendChild(dataEntityNode);
-                }
-            }
-            if (excelLine.dataTypeBDOC != "Entité")
-            {
-                XmlElement dataEntityNode = xmlDoc.CreateElement("string");               
-                XmlText textNode = xmlDoc.CreateTextNode(excelLine.dataDescription);
-                textNode.Value = excelLine.dataName;
-                dataEntityNode.AppendChild(textNode);
-                this.dataEntityListNode.AppendChild(dataEntityNode);
-                this.lastObjectInserted = "DATA";
             }
             //---------------------------------------
 
@@ -370,6 +564,7 @@ namespace BDOCEXCEL2XML
                     this.createData(myBDOCExcelLine);
                     this.createEntity(myBDOCExcelLine);
                     this.createStream(myBDOCExcelLine);
+                    //this.createStreamFlat(myBDOCExcelLine);
 
                     MyProgress.PerformStep();
 
