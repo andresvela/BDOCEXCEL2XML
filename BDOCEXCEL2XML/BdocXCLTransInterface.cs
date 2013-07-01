@@ -72,6 +72,10 @@ namespace BDOCEXCEL2XML
         {           
            
         }
+        public virtual void createStreamFlat(BDOCExcelLine excelLine)
+        {
+
+        }
 
         public virtual void createEntity(BDOCExcelLine excelLine)
         {            
@@ -81,7 +85,7 @@ namespace BDOCEXCEL2XML
         /// <summary>
         /// Fonction qui construira un XML à partir d'un Excel donné.
         /// </summary>
-        public virtual void createXML(ToolStripProgressBar MyProgress)
+        public virtual void createXML(ToolStripProgressBar MyProgress, string type)
         {
                    
         }

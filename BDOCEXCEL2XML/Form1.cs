@@ -75,16 +75,25 @@ namespace BDOCEXCEL2XML
         {
             toolStripStatusLabel2.Text = ConfigurationSettings.AppSettings["workingText"];
 
-            BdocXCLTransInterface myXCLTrans;
+            BdocXCLTransInterface myXCLTrans=null;
+            string type=null;
+           
+                if (comboBoxBDOCVersion.SelectedItem == "Version 5.x"){
+                    type = "XML";
+                    myXCLTrans = new BDOCXCLTransImportV5(XCLFileDialog.FileName, type);
+                }
+                if(comboBoxBDOCVersion.SelectedItem == "Version 5.x FLAT"){
+                    type = "FLAT";
+                    myXCLTrans = new BDOCXCLTransImportV5(XCLFileDialog.FileName, type);
+                }
 
-            if (comboBoxBDOCVersion.SelectedItem=="Version 5.x")
-                myXCLTrans = new BDOCXCLTransImportV5(XCLFileDialog.FileName);
-            
-            else
-                myXCLTrans = new BdocXCLTransImport(XCLFileDialog.FileName);
+                if (comboBoxBDOCVersion.SelectedItem == "Version 4.x")
+                {
+                    myXCLTrans = new BdocXCLTransImport(XCLFileDialog.FileName);
+                }
             try
             {
-                myXCLTrans.createXML(toolStripProgressBar1);
+                myXCLTrans.createXML(toolStripProgressBar1, type);
                 webBrowser1.DocumentText = myXCLTrans.XML ;
                 
                 XmlDocument xmlDoc = new XmlDocument();
@@ -135,7 +144,15 @@ namespace BDOCEXCEL2XML
             BdocXCLTransFlux myXCLTrans = new BdocXCLTransFlux(XCLFileDialog.FileName);
             try
             {
-                myXCLTrans.createXML(toolStripProgressBar1);
+                if (comboBoxBDOCVersion.SelectedItem == "Version 5.x"){
+                    myXCLTrans.createXML(toolStripProgressBar1, "XML");
+                }
+                if (comboBoxBDOCVersion.SelectedItem == "Version 5.x FLAT")
+                {
+                    myXCLTrans.createXML(toolStripProgressBar1, "FLAT");
+                }
+                
+               // myXCLTrans.createXML(toolStripProgressBar1, "");
                 webBrowser2.DocumentText = myXCLTrans.XML;
 
                 XmlDocument xmlDoc = new XmlDocument();
@@ -191,7 +208,7 @@ namespace BDOCEXCEL2XML
             BDOCXCLTransTxt myXCLTrans = new BDOCXCLTransTxt (XCLFileDialog.FileName);
             try
             {
-                myXCLTrans.createXML(toolStripProgressBar1);
+                myXCLTrans.createXML(toolStripProgressBar1, "");
 
                 System.IO.StreamWriter sw = new System.IO.StreamWriter((@"" + System.Environment.GetEnvironmentVariable("temp") + "\\" + ConfigurationSettings.AppSettings["txtNameFile"]), false, Encoding.GetEncoding(1252), 2048);
                 //sw.WriteLine("<HTML><HEAD><META http-equiv=Content-Type content=\"text/html; charset=utf-8\"><META content=\"MSHTML 6.00.6000.16705\" name=GENERATOR></HEAD>");
@@ -268,6 +285,7 @@ namespace BDOCEXCEL2XML
             //comboBox2.SelectedItem = workSheet.Name;
         }
 
+        
           
 
                

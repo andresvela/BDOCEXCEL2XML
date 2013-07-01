@@ -223,7 +223,7 @@ namespace BDOCEXCEL2XML
         /// <summary>
         /// Fonction qui construira un XML à partir d'un Excel donné.
         /// </summary>
-        public override void createXML(ToolStripProgressBar MyProgress)
+        public override void createXML(ToolStripProgressBar MyProgress, string type)
         {
             int index = 1;
             int total = 0;

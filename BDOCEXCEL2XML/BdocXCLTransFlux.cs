@@ -138,7 +138,7 @@ namespace BDOCEXCEL2XML
 
         }
 
-        public override void createXML(ToolStripProgressBar MyProgress)
+        public override void createXML(ToolStripProgressBar MyProgress, string type)
         {
             int index = 1;
             int total = 0;

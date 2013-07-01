@@ -273,8 +273,9 @@
             this.comboBoxBDOCVersion.Enabled = false;
             this.comboBoxBDOCVersion.FormattingEnabled = true;
             this.comboBoxBDOCVersion.Items.AddRange(new object[] {
-            "Version 4.x",
-            "Version 5.x"});
+            "Version 5.x",
+            "Version 5.x FLAT",
+            "Version 4.x"});
             this.comboBoxBDOCVersion.Location = new System.Drawing.Point(430, 352);
             this.comboBoxBDOCVersion.Name = "comboBoxBDOCVersion";
             this.comboBoxBDOCVersion.Size = new System.Drawing.Size(121, 21);
